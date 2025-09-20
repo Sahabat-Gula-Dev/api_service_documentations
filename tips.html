@@ -1,0 +1,185 @@
+<h1>Tips Service</h1>
+<p>
+  Endpoint-endpoint ini digunakan untuk mengelola data tips singkat yang dapat
+  ditampilkan secara acak di aplikasi.
+</p>
+
+<h2>Tips</h2>
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/tips</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Tambah Tips Baru</h3>
+    <p>
+      Menambahkan data tips baru ke dalam database. Endpoint ini memerlukan
+      otorisasi. Minimal salah satu dari <code>heading</code> atau
+      <code>content</code> harus diisi.
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+    <h3>Request Body <code>application/json</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>heading</code></td>
+          <td>string</td>
+          <td>Judul atau kalimat pembuka tips. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>content</code></td>
+          <td>string</td>
+          <td>Isi konten dari tips. Opsional.</td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Success Response <code>201 Created</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Tips berhasil ditambahkan.",
+    "data": {
+        "tip": {
+            "id": 1,
+            "heading": "Tips Hidrasi",
+            "content": "Pastikan minum 8 gelas air setiap hari untuk membantu fungsi tubuh yang optimal.",
+            "created_at": "2025-09-20T18:00:00.000Z"
+        }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-get">GET</span>
+    <span class="endpoint-path">/tips</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Ambil Tips Acak</h3>
+    <p>
+      Mengambil satu data tips secara acak dari database. Endpoint ini bersifat
+      publik.
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-none">None</span>
+    </div>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "data": {
+        "tip": {
+            "id": 1,
+            "heading": "Tips Hidrasi",
+            "content": "Pastikan minum 8 gelas air setiap hari untuk membantu fungsi tubuh yang optimal.",
+            "created_at": "2025-09-20T18:00:00.000Z"
+        }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-get">GET</span>
+    <span class="endpoint-path">/tips/{id}</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Detail Tips</h3>
+    <p>Mengambil detail satu data tips berdasarkan ID-nya.</p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-none">None</span>
+    </div>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "data": {
+        "tip": {
+            "id": 1,
+            "heading": "Tips Hidrasi",
+            "content": "Pastikan minum 8 gelas air setiap hari untuk membantu fungsi tubuh yang optimal.",
+            "created_at": "2025-09-20T18:00:00.000Z"
+        }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-put">PUT</span>
+    <span class="endpoint-path">/tips/{id}</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Perbarui Tips</h3>
+    <p>
+      Memperbarui data tips berdasarkan ID. Semua field bersifat opsional (kirim
+      hanya yang ingin diubah).
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+    <h3>Request Body <code>application/json</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>heading</code></td>
+          <td>string</td>
+          <td>Judul baru. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>content</code></td>
+          <td>string</td>
+          <td>Konten baru. Opsional.</td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Tips berhasil diperbarui.",
+    "data": {
+        "tip": {
+            "id": 1,
+            "heading": "Tips Tidur Berkualitas",
+            "content": "Hindari layar gadget 1 jam sebelum tidur untuk kualitas istirahat yang lebih baik.",
+            "created_at": "2025-09-20T18:00:00.000Z"
+        }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-delete">DELETE</span>
+    <span class="endpoint-path">/tips/{id}</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Hapus Tips</h3>
+    <p>Menghapus data tips secara permanen berdasarkan ID.</p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Tips berhasil dihapus."
+}</code></pre>
+  </div>
+</div>

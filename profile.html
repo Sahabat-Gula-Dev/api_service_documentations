@@ -1,0 +1,175 @@
+<h1>Profile Service</h1>
+<p>
+  Endpoint ini digunakan oleh pengguna yang sudah login untuk mengatur atau
+  mengambil data profil kesehatan mereka. Semua endpoint di sini memerlukan
+  otorisasi.
+</p>
+
+<h2>User Profile Management</h2>
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/setup</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Setup atau Perbarui Profil</h3>
+    <p>
+      Mengisi atau memperbarui data profil kesehatan pengguna. Setelah data
+      dikirim, server akan menghitung dan mengembalikan skor risiko dan
+      kebutuhan kalori pengguna.
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+
+    <h3>Request Body <code>application/json</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>gender</code></td>
+          <td>string</td>
+          <td>
+            Jenis kelamin. Pilihan: <code>"Laki-laki"</code>,
+            <code>"Perempuan"</code>. <span class="required">Wajib.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><code>age</code></td>
+          <td>integer</td>
+          <td>
+            Umur dalam tahun.
+            <span class="required">Wajib, min 1, maks 120.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><code>height</code></td>
+          <td>integer</td>
+          <td>
+            Tinggi badan dalam cm.
+            <span class="required">Wajib, min 50, maks 250.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><code>weight</code></td>
+          <td>integer</td>
+          <td>
+            Berat badan dalam kg.
+            <span class="required">Wajib, min 10, maks 300.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><code>waist_circumference</code></td>
+          <td>integer</td>
+          <td>
+            Lingkar pinggang dalam cm.
+            <span class="required">Wajib, min 30, maks 200.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><code>blood_pressure</code></td>
+          <td>boolean</td>
+          <td>
+            Apakah pernah minum obat tekanan darah tinggi?
+            <span class="required">Wajib.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><code>blood_sugar</code></td>
+          <td>boolean</td>
+          <td>
+            Apakah pernah ditemukan gula darah tinggi?
+            <span class="required">Wajib.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><code>eat_vegetables</code></td>
+          <td>boolean</td>
+          <td>
+            Apakah makan sayur/buah setiap hari?
+            <span class="required">Wajib.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><code>diabetes_family</code></td>
+          <td>string</td>
+          <td>
+            Riwayat diabetes keluarga. Pilihan: <code>"Tingkat Satu"</code>,
+            <code>"Tingkat Dua"</code>, <code>"Tidak Ada"</code>.
+            <span class="required">Wajib.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><code>activity_level</code></td>
+          <td>string</td>
+          <td>
+            Tingkat aktivitas fisik. Pilihan: <code>"Tidak Aktif"</code>,
+            <code>"Ringan"</code>, <code>"Sedang"</code>, <code>"Berat"</code>,
+            <code>"Sangat Berat"</code>. <span class="required">Wajib.</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Success Response <code>200 OK</code></h3>
+    <p>Server akan mengembalikan hasil kalkulasi berdasarkan input profil.</p>
+    <pre><code>{
+    "status": "success",
+    "message": "Profil berhasil disimpan.",
+    "data": {
+        "bmi": 22.86,
+        "riskIndex": 3,
+        "maxCalories": 2100.5,
+        "carbs": 262.56,
+        "protein": 78.77,
+        "fat": 58.35,
+        "sugar": 52.51
+    }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-get">GET</span>
+    <span class="endpoint-path">/me</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Ambil Data Profil Sendiri</h3>
+    <p>
+      Mengambil data hasil kalkulasi profil kesehatan dari pengguna yang sedang
+      login.
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+
+    <h3>Request Body</h3>
+    <p>Tidak memerlukan request body.</p>
+
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "data": {
+        "profile": {
+            "bmi_score": 22.86,
+            "risk_index": 3,
+            "max_calories": 2100.5,
+            "max_carbs": 262.56,
+            "max_protein": 78.77,
+            "max_fat": 58.35,
+            "max_sugar": 52.51,
+            "max_natrium": null,
+            "max_fiber": null,
+            "max_potassium": null
+        }
+    }
+}</code></pre>
+  </div>
+</div>

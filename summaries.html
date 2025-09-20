@@ -1,0 +1,299 @@
+<h1>Summary Service</h1>
+<p>
+  Endpoint-endpoint ini digunakan untuk mengambil data ringkasan (summary)
+  aktivitas dan konsumsi pengguna dalam rentang waktu tertentu. Semua endpoint
+  di sini memerlukan otorisasi.
+</p>
+
+<h2>Summaries</h2>
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-get">GET</span>
+    <span class="endpoint-path">/daily-summary</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Ringkasan Konsumsi Hari Ini</h3>
+    <p>
+      Mengambil data ringkasan total nutrisi, kalori terbakar, langkah, dan air
+      yang dikonsumsi untuk hari ini (sesuai zona waktu server).
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+
+    <h3>Success Response <code>200 OK</code></h3>
+    <p>Mengembalikan satu objek ringkasan untuk hari ini.</p>
+    <pre><code>{
+    "status": "success",
+    "data": {
+        "summary": {
+            "date": "2025-09-20",
+            "nutrients": {
+                "calories": 1850.5,
+                "carbs": 210.2,
+                "protein": 80.5,
+                "fat": 60.1,
+                "sugar": 45.0,
+                "sodium": 1.5,
+                "fiber": 25.5,
+                "potassium": 2.1
+            },
+            "activities": {
+                "burned": 350
+            },
+            "steps": 8500,
+            "water": 2000
+        }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-get">GET</span>
+    <span class="endpoint-path">/weekly-summary</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Ringkasan 7 Hari Terakhir</h3>
+    <p>
+      Mengambil data ringkasan harian untuk 7 hari terakhir (termasuk hari ini).
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+
+    <h3>Success Response <code>200 OK</code></h3>
+    <p>Mengembalikan array berisi 7 objek ringkasan harian.</p>
+    <pre><code>{
+    "status": "success",
+    "data": {
+        "summary": [
+            {
+                "date": "2025-09-14",
+                "nutrients": { "calories": 1920, "carbs": 220, "protein": 90, "fat": 65, "sugar": 50, "sodium": 1.8, "fiber": 28, "potassium": 2.3 },
+                "activities": { "burned": 400 },
+                "steps": 10200,
+                "water": 2200
+            },
+            {
+                "date": "2025-09-15",
+                "nutrients": { "calories": 1750, "carbs": 200, "protein": 75, "fat": 58, "sugar": 40, "sodium": 1.4, "fiber": 25, "potassium": 2.0 },
+                "activities": { "burned": 250 },
+                "steps": 8100,
+                "water": 2000
+            },
+            {
+                "date": "2025-09-16",
+                "nutrients": { "calories": 2050, "carbs": 240, "protein": 95, "fat": 70, "sugar": 55, "sodium": 2.0, "fiber": 30, "potassium": 2.5 },
+                "activities": { "burned": 500 },
+                "steps": 12050,
+                "water": 2500
+            },
+            {
+                "date": "2025-09-17",
+                "nutrients": { "calories": 1800, "carbs": 210, "protein": 80, "fat": 62, "sugar": 42, "sodium": 1.6, "fiber": 26, "potassium": 2.2 },
+                "activities": { "burned": 300 },
+                "steps": 8800,
+                "water": 2100
+            },
+            {
+                "date": "2025-09-18",
+                "nutrients": { "calories": 2100, "carbs": 250, "protein": 100, "fat": 72, "sugar": 60, "sodium": 2.1, "fiber": 32, "potassium": 2.6 },
+                "activities": { "burned": 550 },
+                "steps": 13000,
+                "water": 2800
+            },
+            {
+                "date": "2025-09-19",
+                "nutrients": { "calories": 1880, "carbs": 215, "protein": 85, "fat": 65, "sugar": 48, "sodium": 1.7, "fiber": 27, "potassium": 2.3 },
+                "activities": { "burned": 320 },
+                "steps": 9500,
+                "water": 2300
+            },
+            {
+                "date": "2025-09-20",
+                "nutrients": { "calories": 1850.5, "carbs": 210.2, "protein": 80.5, "fat": 60.1, "sugar": 45.0, "sodium": 1.5, "fiber": 25.5, "potassium": 2.1 },
+                "activities": { "burned": 350 },
+                "steps": 8500,
+                "water": 2000
+            }
+        ]
+    }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-get">GET</span>
+    <span class="endpoint-path">/monthly-summary</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Ringkasan 7 Bulan Terakhir</h3>
+    <p>
+      Mengambil data ringkasan total per bulan untuk 7 bulan terakhir (termasuk
+      bulan ini).
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+
+    <h3>Success Response <code>200 OK</code></h3>
+    <p>Mengembalikan array berisi 7 objek ringkasan bulanan.</p>
+    <pre><code>{
+    "status": "success",
+    "data": {
+        "summary": [
+            {
+                "date": "2025-03",
+                "nutrients": { "calories": 55000, "carbs": 6200, "protein": 2400, "fat": 1800, "sugar": 1200, "sodium": 50, "fiber": 800, "potassium": 60 },
+                "activities": { "burned": 9000 },
+                "steps": 240000,
+                "water": 60000
+            },
+            {
+                "date": "2025-04",
+                "nutrients": { "calories": 58000, "carbs": 6500, "protein": 2500, "fat": 1900, "sugar": 1300, "sodium": 55, "fiber": 850, "potassium": 65 },
+                "activities": { "burned": 9500 },
+                "steps": 250000,
+                "water": 62000
+            },
+            {
+                "date": "2025-05",
+                "nutrients": { "calories": 60000, "carbs": 6800, "protein": 2600, "fat": 2000, "sugar": 1400, "sodium": 60, "fiber": 900, "potassium": 70 },
+                "activities": { "burned": 10000 },
+                "steps": 260000,
+                "water": 65000
+            },
+            {
+                "date": "2025-06",
+                "nutrients": { "calories": 57000, "carbs": 6400, "protein": 2450, "fat": 1850, "sugar": 1250, "sodium": 53, "fiber": 830, "potassium": 63 },
+                "activities": { "burned": 9200 },
+                "steps": 245000,
+                "water": 61000
+            },
+            {
+                "date": "2025-07",
+                "nutrients": { "calories": 61000, "carbs": 6900, "protein": 2650, "fat": 2050, "sugar": 1450, "sodium": 62, "fiber": 920, "potassium": 72 },
+                "activities": { "burned": 10500 },
+                "steps": 270000,
+                "water": 68000
+            },
+            {
+                "date": "2025-08",
+                "nutrients": { "calories": 59000, "carbs": 6600, "protein": 2550, "fat": 1950, "sugar": 1350, "sodium": 58, "fiber": 880, "potassium": 68 },
+                "activities": { "burned": 9800 },
+                "steps": 255000,
+                "water": 64000
+            },
+            {
+                "date": "2025-09",
+                "nutrients": { "calories": 40000, "carbs": 4500, "protein": 1700, "fat": 1300, "sugar": 900, "sodium": 40, "fiber": 600, "potassium": 45 },
+                "activities": { "burned": 6500 },
+                "steps": 180000,
+                "water": 45000
+            }
+        ]
+    }
+}</code></pre>
+  </div>
+</div>
+
+<h2>History Log</h2>
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-get">GET</span>
+    <span class="endpoint-path">/history-log</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Histori Log Makanan & Aktivitas</h3>
+    <p>
+      Mengambil histori log konsumsi makanan dan aktivitas yang dilakukan
+      pengguna. Secara default menampilkan 3 hari terakhir.
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+
+    <h3>Success Response <code>200 OK</code></h3>
+    <p>
+      Mengembalikan array berisi objek per tanggal, yang di dalamnya terdapat
+      log makanan dan aktivitas.
+    </p>
+    <pre><code>{
+    "status": "success",
+    "data": {
+        "history": [
+            {
+                "date": "2025-09-20",
+                "foods": [
+                    {
+                        "id": "a1b2c3d4-...",
+                        "name": "Nasi Goreng",
+                        "photo_url": "https://url.com/nasi.jpg",
+                        "description": "Nasi goreng spesial dengan telur.",
+                        "serving_size": 1,
+                        "serving_unit": "piring",
+                        "weight_size": 250,
+                        "weight_unit": "gr",
+                        "calories": 450.5,
+                        "portion": 1,
+                        "time": "2025-09-20T12:30:00.000Z"
+                    }
+                ],
+                "activities": [
+                    {
+                        "id": "c1d2e3f4-...",
+                        "name": "Lari Pagi",
+                        "photo_url": "https://url.com/lari.jpg",
+                        "description": "Lari santai selama 30 menit.",
+                        "category_id": 1,
+                        "calories_burned": 150,
+                        "duration": 30,
+                        "duration_unit": "menit",
+                        "time": "2025-09-20T07:00:00.000Z"
+                    }
+                ]
+            },
+            {
+                "date": "2025-09-19",
+                "foods": [
+                    {
+                        "id": "b2c3d4e5-...",
+                        "name": "Salad Buah",
+                        "photo_url": "https://url.com/salad.jpg",
+                        "description": "Salad buah segar dengan yoghurt.",
+                        "serving_size": 1,
+                        "serving_unit": "mangkuk",
+                        "weight_size": 150,
+                        "weight_unit": "gr",
+                        "calories": 120,
+                        "portion": 1,
+                        "time": "2025-09-19T10:00:00.000Z"
+                    }
+                ],
+                "activities": []
+            },
+            {
+                "date": "2025-09-18",
+                "foods": [],
+                "activities": [
+                    {
+                        "id": "d2e3f4a5-...",
+                        "name": "Angkat Beban",
+                        "photo_url": "https://url.com/gym.jpg",
+                        "description": "Latihan kekuatan di gym.",
+                        "category_id": 2,
+                        "calories_burned": 250,
+                        "duration": 60,
+                        "duration_unit": "menit",
+                        "time": "2025-09-18T18:30:00.000Z"
+                    }
+                ]
+            }
+        ]
+    }
+}</code></pre>
+  </div>
+</div>

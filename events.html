@@ -1,0 +1,366 @@
+<h1>Event Service</h1>
+<p>
+  Endpoint-endpoint ini digunakan untuk mengelola semua data yang berkaitan
+  dengan event atau acara, mulai dari melihat daftar, menambah, mengubah, hingga
+  menghapus data event dan kategorinya.
+</p>
+
+<h2>Events</h2>
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/events</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Tambah Event Baru</h3>
+    <p>
+      Menambahkan data event baru ke dalam database. Endpoint ini memerlukan
+      otorisasi dan mengirim data sebagai
+      <code>multipart/form-data</code> karena ada upload gambar sampul (cover).
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+    <h3>Request Body <code>multipart/form-data</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>title</code></td>
+          <td>string</td>
+          <td>Judul event. <span class="required">Wajib.</span></td>
+        </tr>
+        <tr>
+          <td><code>event_date</code></td>
+          <td>date</td>
+          <td>
+            Tanggal pelaksanaan event (format: YYYY-MM-DD).
+            <span class="required">Wajib.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><code>event_start</code></td>
+          <td>string</td>
+          <td>
+            Waktu mulai event (format: HH:mm).
+            <span class="required">Wajib.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><code>event_end</code></td>
+          <td>string</td>
+          <td>
+            Waktu selesai event (format: HH:mm).
+            <span class="required">Wajib.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><code>location</code></td>
+          <td>string</td>
+          <td>
+            Lokasi umum event (cth: "Zoom Meeting", "Aula Utama"). Opsional.
+          </td>
+        </tr>
+        <tr>
+          <td><code>location_detail</code></td>
+          <td>string</td>
+          <td>Detail lokasi seperti link atau alamat lengkap. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>cover_file</code></td>
+          <td>file</td>
+          <td>File gambar sampul. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>content</code></td>
+          <td>string</td>
+          <td>
+            Isi deskripsi event, biasanya dalam format JSON dari editor teks.
+            Opsional.
+          </td>
+        </tr>
+        <tr>
+          <td><code>category_id</code></td>
+          <td>integer</td>
+          <td>
+            ID kategori yang sudah ada. Opsional, salah satu dari
+            <code>category_id</code> atau <code>category_name</code> harus ada.
+          </td>
+        </tr>
+        <tr>
+          <td><code>category_name</code></td>
+          <td>string</td>
+          <td>Nama kategori baru yang akan dibuat. Opsional.</td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Success Response <code>201 Created</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Event berhasil ditambahkan.",
+    "data": {
+        "event": {
+            "id": "d1e2f3a4-b5c6-7890-1234-567890abcdef",
+            "author_id": "b20542c9-4386-4636-b906-863f36cbc7dd",
+            "title": "Webinar Kesehatan Diabetes",
+            "event_date": "2025-10-25T00:00:00.000Z",
+            "event_start": "09:00:00",
+            "event_end": "11:00:00",
+            "location": "Zoom Meeting",
+            "location_detail": "https://zoom.us/j/1234567890",
+            "cover_url": "https://url.supabase.co/storage/v1/object/public/events/image.jpg",
+            "content": "{\"ops\":[{\"insert\":\"Deskripsi lengkap webinar...\\n\"}]}",
+            "created_at": "2025-09-20T16:00:00.000Z",
+            "category_id": 1
+        }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-get">GET</span>
+    <span class="endpoint-path">/events</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Daftar Event</h3>
+    <p>
+      Mengambil daftar event dengan dukungan pagination, pencarian (query `q`),
+      dan filter.
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-none">None</span>
+    </div>
+    <h3>Query Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>q</code></td>
+          <td>string</td>
+          <td>Teks pencarian untuk judul atau lokasi. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>category_id</code></td>
+          <td>integer</td>
+          <td>Filter berdasarkan ID kategori. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>category_name</code></td>
+          <td>string</td>
+          <td>Filter berdasarkan nama kategori. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>page</code></td>
+          <td>integer</td>
+          <td>Nomor halaman. Default: 1. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>limit</code></td>
+          <td>integer</td>
+          <td>Jumlah item per halaman. Default: 20. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>sort</code></td>
+          <td>string</td>
+          <td>
+            Urutan pengurutan. Contoh: <code>title.asc</code>. Default:
+            <code>created_at.desc</code>. Opsional.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "data": [
+        {
+            "id": "d1e2f3a4-b5c6-7890-1234-567890abcdef",
+            "title": "Webinar Kesehatan Diabetes",
+            "event_date": "2025-10-25T00:00:00.000Z",
+            "location": "Zoom Meeting",
+            "cover_url": "https://url.supabase.co/storage/v1/object/public/events/image.jpg",
+            "created_at": "2025-09-20T16:00:00.000Z",
+            "event_categories": {
+                "id": 1,
+                "name": "Webinar"
+            }
+        }
+    ],
+    "meta": { "page": 1, "limit": 20, "total": 15 }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-get">GET</span>
+    <span class="endpoint-path">/events/{id}</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Detail Event</h3>
+    <p>Mengambil detail satu data event berdasarkan ID-nya.</p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-none">None</span>
+    </div>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "data": {
+        "event": {
+            "id": "d1e2f3a4-b5c6-7890-1234-567890abcdef",
+            "title": "Webinar Kesehatan Diabetes",
+            "event_date": "2025-10-25T00:00:00.000Z",
+            "event_start": "09:00:00",
+            "event_end": "11:00:00",
+            "location": "Zoom Meeting",
+            "location_detail": "https://zoom.us/j/1234567890",
+            "cover_url": "https://url.supabase.co/storage/v1/object/public/events/image.jpg",
+            "content": "{\"ops\":[{\"insert\":\"Deskripsi lengkap webinar...\\n\"}]}",
+            "created_at": "2025-09-20T16:00:00.000Z",
+            "event_categories": {
+                "id": 1,
+                "name": "Webinar"
+            }
+        }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-put">PUT</span>
+    <span class="endpoint-path">/events/{id}</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Perbarui Event</h3>
+    <p>
+      Memperbarui data event berdasarkan ID. Semua field bersifat opsional
+      (kirim hanya yang ingin diubah).
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+    <h3>Request Body <code>multipart/form-data</code></h3>
+    <p>
+      Sama seperti request body untuk <code>POST /events</code>, tetapi semua
+      field bersifat opsional.
+    </p>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Event berhasil diperbarui.",
+    "data": {
+        "event": {
+            "id": "d1e2f3a4-b5c6-7890-1234-567890abcdef",
+            "author_id": "b20542c9-4386-4636-b906-863f36cbc7dd",
+            "title": "Webinar Kesehatan Diabetes (Updated)",
+            "event_date": "2025-10-26T00:00:00.000Z",
+            "event_start": "10:00:00",
+            "event_end": "12:00:00",
+            "location": "Google Meet",
+            "location_detail": "https://meet.google.com/xyz",
+            "cover_url": "https://url.supabase.co/storage/v1/object/public/events/new_image.jpg",
+            "content": "{\"ops\":[{\"insert\":\"Deskripsi yang sudah diperbarui...\\n\"}]}",
+            "created_at": "2025-09-20T16:00:00.000Z",
+            "category_id": 2
+        }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-delete">DELETE</span>
+    <span class="endpoint-path">/events/{id}</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Hapus Event</h3>
+    <p>Menghapus data event secara permanen berdasarkan ID.</p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Event berhasil dihapus."
+}</code></pre>
+  </div>
+</div>
+
+<h2>Event Categories</h2>
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-get">GET</span>
+    <span class="endpoint-path">/event-categories</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Daftar Kategori Event</h3>
+    <p>Mengambil daftar semua kategori event.</p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-none">None</span>
+    </div>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "data": [
+        { "id": 1, "name": "Webinar" },
+        { "id": 2, "name": "Workshop" }
+    ]
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/event-categories</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Buat Kategori Event Baru</h3>
+    <p>Menambahkan kategori event baru.</p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+    <h3>Request Body <code>application/json</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>name</code></td>
+          <td>string</td>
+          <td>Nama kategori baru. <span class="required">Wajib.</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Success Response <code>201 Created</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Kategori berhasil ditambahkan.",
+    "data": {
+        "category": { "id": 3, "name": "Seminar Offline" }
+    }
+}</code></pre>
+  </div>
+</div>

@@ -1,0 +1,333 @@
+<h1>Activity Service</h1>
+<p>
+  Endpoint-endpoint ini digunakan untuk mengelola semua data yang berkaitan
+  dengan aktivitas fisik, mulai dari melihat daftar, menambah, mengubah, hingga
+  menghapus data aktivitas dan kategorinya.
+</p>
+
+<h2>Activities</h2>
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/activities</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Tambah Aktivitas Baru</h3>
+    <p>
+      Menambahkan data aktivitas baru ke dalam database. Endpoint ini memerlukan
+      otorisasi dan mengirim data sebagai
+      <code>multipart/form-data</code> karena ada upload gambar.
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+    <h3>Request Body <code>multipart/form-data</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>name</code></td>
+          <td>string</td>
+          <td>Nama aktivitas. <span class="required">Wajib.</span></td>
+        </tr>
+        <tr>
+          <td><code>photo_file</code></td>
+          <td>file</td>
+          <td>File gambar aktivitas. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>description</code></td>
+          <td>string</td>
+          <td>Deskripsi singkat aktivitas. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>category_id</code></td>
+          <td>integer</td>
+          <td>
+            ID kategori yang sudah ada. Opsional, salah satu dari
+            <code>category_id</code> atau <code>category_name</code> harus ada.
+          </td>
+        </tr>
+        <tr>
+          <td><code>category_name</code></td>
+          <td>string</td>
+          <td>Nama kategori baru yang akan dibuat. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>calories_burned</code></td>
+          <td>integer</td>
+          <td>Estimasi kalori yang terbakar. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>duration</code></td>
+          <td>integer</td>
+          <td>Durasi aktivitas (misal: 30). Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>duration_unit</code></td>
+          <td>string</td>
+          <td>Satuan durasi (misal: menit, jam). Opsional.</td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Success Response <code>201 Created</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Aktivitas berhasil ditambahkan.",
+    "data": {
+        "activity": {
+            "id": "c1d2e3f4-a5b6-7890-1234-567890abcdef",
+            "name": "Lari Pagi",
+            "photo_url": "https://url.supabase.co/storage/v1/object/public/activities/image.jpg",
+            "description": "Lari santai di pagi hari untuk meningkatkan kebugaran.",
+            "category_id": 1,
+            "calories_burned": 150,
+            "duration": 30,
+            "duration_unit": "menit",
+            "created_at": "2025-09-20T15:00:00.000Z"
+        }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-get">GET</span>
+    <span class="endpoint-path">/activities</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Daftar Aktivitas</h3>
+    <p>
+      Mengambil daftar aktivitas dengan dukungan pagination, pencarian (query
+      `q`), dan filter. Misalnya mencari aktivitas "lari" maka
+      <code>/activities?q=lari</code>.
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-none">None</span>
+    </div>
+    <h3>Query Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>q</code></td>
+          <td>string</td>
+          <td>Teks pencarian untuk nama atau deskripsi. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>category_id</code></td>
+          <td>integer</td>
+          <td>Filter berdasarkan ID kategori. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>category_name</code></td>
+          <td>string</td>
+          <td>Filter berdasarkan nama kategori. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>page</code></td>
+          <td>integer</td>
+          <td>Nomor halaman. Default: 1. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>limit</code></td>
+          <td>integer</td>
+          <td>Jumlah item per halaman. Default: 20. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>sort</code></td>
+          <td>string</td>
+          <td>
+            Urutan pengurutan. Contoh: <code>name.asc</code>. Default:
+            <code>created_at.desc</code>. Opsional.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "data": [
+        {
+            "id": "c1d2e3f4-a5b6-7890-1234-567890abcdef",
+            "name": "Lari Pagi",
+            "photo_url": "https://url.supabase.co/storage/v1/object/public/activities/image.jpg",
+            "description": "Lari santai di pagi hari untuk meningkatkan kebugaran.",
+            "category_id": 1,
+            "calories_burned": 150,
+            "duration": 30,
+            "duration_unit": "menit",
+            "created_at": "2025-09-20T15:00:00.000Z",
+            "activity_categories": {
+                "id": 1,
+                "name": "Kardio"
+            }
+        }
+    ],
+    "meta": { "page": 1, "limit": 20, "total": 25 }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-get">GET</span>
+    <span class="endpoint-path">/activities/{id}</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Detail Aktivitas</h3>
+    <p>Mengambil detail satu data aktivitas berdasarkan ID-nya.</p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-none">None</span>
+    </div>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "data": {
+        "activity": {
+            "id": "c1d2e3f4-a5b6-7890-1234-567890abcdef",
+            "name": "Lari Pagi",
+            "photo_url": "https://url.supabase.co/storage/v1/object/public/activities/image.jpg",
+            "description": "Lari santai di pagi hari untuk meningkatkan kebugaran.",
+            "category_id": 1,
+            "calories_burned": 150,
+            "duration": 30,
+            "duration_unit": "menit",
+            "created_at": "2025-09-20T15:00:00.000Z",
+            "activity_categories": {
+                "id": 1,
+                "name": "Kardio"
+            }
+        }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-put">PUT</span>
+    <span class="endpoint-path">/activities/{id}</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Perbarui Aktivitas</h3>
+    <p>
+      Memperbarui data aktivitas berdasarkan ID. Semua field bersifat opsional
+      (kirim hanya yang ingin diubah).
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+    <h3>Request Body <code>multipart/form-data</code></h3>
+    <p>
+      Sama seperti request body untuk <code>POST /activities</code>, tetapi
+      semua field bersifat opsional.
+    </p>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Aktivitas berhasil diperbarui.",
+    "data": {
+        "activity": {
+            "id": "c1d2e3f4-a5b6-7890-1234-567890abcdef",
+            "name": "Lari Sore",
+            /* ... properti lainnya yang diperbarui ... */
+        }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-delete">DELETE</span>
+    <span class="endpoint-path">/activities/{id}</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Hapus Aktivitas</h3>
+    <p>Menghapus data aktivitas secara permanen berdasarkan ID.</p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Aktivitas berhasil dihapus."
+}</code></pre>
+  </div>
+</div>
+
+<h2>Activity Categories</h2>
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-get">GET</span>
+    <span class="endpoint-path">/activity-categories</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Daftar Kategori Aktivitas</h3>
+    <p>Mengambil daftar semua kategori aktivitas.</p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-none">None</span>
+    </div>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "data": [
+        { "id": 1, "name": "Kardio" },
+        { "id": 2, "name": "Angkat Beban" }
+    ]
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/activity-categories</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Buat Kategori Aktivitas Baru</h3>
+    <p>Menambahkan kategori aktivitas baru.</p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+    <h3>Request Body <code>application/json</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>name</code></td>
+          <td>string</td>
+          <td>Nama kategori baru. <span class="required">Wajib.</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Success Response <code>201 Created</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Kategori berhasil ditambahkan.",
+    "data": {
+        "category": { "id": 3, "name": "Yoga" }
+    }
+}</code></pre>
+  </div>
+</div>

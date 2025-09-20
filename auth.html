@@ -1,0 +1,425 @@
+<h1>Authentication Service</h1>
+<p>
+  Endpoint-endpoint ini menangani semua hal yang berkaitan dengan registrasi,
+  login, dan manajemen akun pengguna, termasuk untuk admin.
+</p>
+
+<h2>User Authentication</h2>
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/register</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Register User Baru</h3>
+    <p>
+      Mendaftarkan pengguna baru dan mengirimkan OTP (One-Time Password)
+      aktivasi ke email pengguna.
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-none">None</span>
+    </div>
+    <h3>Request Body <code>application/json</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>username</code></td>
+          <td>string</td>
+          <td>Nama pengguna. <span class="required">Wajib, min 3.</span></td>
+        </tr>
+        <tr>
+          <td><code>email</code></td>
+          <td>string</td>
+          <td>Alamat email yang valid. <span class="required">Wajib.</span></td>
+        </tr>
+        <tr>
+          <td><code>password</code></td>
+          <td>string</td>
+          <td>
+            Password pengguna. <span class="required">Wajib, min 6.</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Success Response <code>201 Created</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "User berhasil diregistrasi. Silakan cek email untuk aktivasi."
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/verify-otp</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Verifikasi OTP Aktivasi</h3>
+    <p>Memvalidasi OTP dan mengaktifkan akun jika valid.</p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-none">None</span>
+    </div>
+    <h3>Request Body <code>application/json</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>email</code></td>
+          <td>string</td>
+          <td>
+            Alamat email yang didaftarkan. <span class="required">Wajib.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><code>otp</code></td>
+          <td>string</td>
+          <td>Kode OTP 6 digit. <span class="required">Wajib.</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Akun berhasil diaktivasi"
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/login</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Login User</h3>
+    <p>
+      Mengautentikasi pengguna dan mengembalikan access token jika berhasil.
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-none">None</span>
+    </div>
+    <h3>Request Body <code>application/json</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>email</code></td>
+          <td>string</td>
+          <td>Alamat email terdaftar. <span class="required">Wajib.</span></td>
+        </tr>
+        <tr>
+          <td><code>password</code></td>
+          <td>string</td>
+          <td>Password pengguna. <span class="required">Wajib.</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Login berhasil.",
+    "data": {
+        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMzQ1IiwidXNlcm5hbWUiOiJ0ZXN0In0.abcdef"
+    }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/resend-otp</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Kirim Ulang OTP Aktivasi</h3>
+    <p>
+      Mengirim ulang OTP jika pengguna tidak menerima email pertama atau OTP
+      sudah kedaluwarsa.
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-none">None</span>
+    </div>
+    <h3>Request Body <code>application/json</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>email</code></td>
+          <td>string</td>
+          <td>Alamat email terdaftar. <span class="required">Wajib.</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "OTP baru telah dikirim ke email Anda."
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/google</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Login dengan Google</h3>
+    <p>Mengautentikasi pengguna menggunakan ID Token dari Google Sign-In.</p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-none">None</span>
+    </div>
+    <h3>Request Body <code>application/json</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>idToken</code></td>
+          <td>string</td>
+          <td>
+            ID Token yang didapat dari Google.
+            <span class="required">Wajib.</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Login berhasil.",
+    "data": {
+        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMzQ1IiwidXNlcm5hbWUiOiJ0ZXN0In0.abcdef"
+    }
+}</code></pre>
+  </div>
+</div>
+
+<h2>Password Reset</h2>
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/forgot-password</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Minta Reset Password</h3>
+    <p>Mengirimkan OTP untuk proses reset password ke email yang terdaftar.</p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-none">None</span>
+    </div>
+    <h3>Request Body <code>application/json</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>email</code></td>
+          <td>string</td>
+          <td>Alamat email terdaftar. <span class="required">Wajib.</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "OTP reset password telah dikirim."
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/verify-reset-otp</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Verifikasi OTP Reset</h3>
+    <p>
+      Memvalidasi OTP reset dan mengembalikan `resetToken` yang akan digunakan
+      untuk mengganti password.
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-none">None</span>
+    </div>
+    <h3>Request Body <code>application/json</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>email</code></td>
+          <td>string</td>
+          <td>Alamat email. <span class="required">Wajib.</span></td>
+        </tr>
+        <tr>
+          <td><code>otp</code></td>
+          <td>string</td>
+          <td>Kode OTP 6 digit. <span class="required">Wajib.</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "OTP valid.",
+    "data": {
+        "resetToken": "unique_reset_token_string"
+    }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/reset-password</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Reset Password</h3>
+    <p>
+      Mengganti password lama dengan yang baru menggunakan `resetToken` yang
+      valid.
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-none">None</span>
+    </div>
+    <h3>Request Body <code>application/json</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>resetToken</code></td>
+          <td>string</td>
+          <td>
+            Token yang didapat dari `/verify-reset-otp`.
+            <span class="required">Wajib.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><code>newPassword</code></td>
+          <td>string</td>
+          <td>Password baru. <span class="required">Wajib, min 6.</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Password berhasil direset."
+}</code></pre>
+  </div>
+</div>
+
+<h2>Admin Authentication</h2>
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/create-account</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Buat Akun Baru (oleh Super Admin)</h3>
+    <p>
+      Endpoint khusus untuk Super Admin membuat akun baru dengan role `admin`
+      atau `user`.
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+    <h3>Request Body <code>application/json</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>username</code></td>
+          <td>string</td>
+          <td>Nama pengguna baru. <span class="required">Wajib.</span></td>
+        </tr>
+        <tr>
+          <td><code>email</code></td>
+          <td>string</td>
+          <td>Email pengguna baru. <span class="required">Wajib.</span></td>
+        </tr>
+        <tr>
+          <td><code>password</code></td>
+          <td>string</td>
+          <td>Password pengguna baru. <span class="required">Wajib.</span></td>
+        </tr>
+        <tr>
+          <td><code>role</code></td>
+          <td>string</td>
+          <td>
+            Peran akun baru. Pilihan: `admin` atau `user`.
+            <span class="required">Wajib.</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Success Response <code>201 Created</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Akun berhasil dibuat.",
+    "data": {
+        "profile": {
+            "id": "new-user-uuid",
+            "username": "admin_baru",
+            "email": "adminbaru@example.com",
+            "role": "admin",
+            "is_active": true
+        }
+    }
+}</code></pre>
+  </div>
+</div>

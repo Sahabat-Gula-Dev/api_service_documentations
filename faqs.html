@@ -1,0 +1,291 @@
+<h1>FAQ Service</h1>
+<p>
+  Endpoint-endpoint ini digunakan untuk mengelola semua data yang berkaitan
+  dengan Pertanyaan yang Sering Diajukan (FAQ), termasuk manajemen kategori FAQ.
+</p>
+
+<h2>FAQs</h2>
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/faqs</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Tambah FAQ Baru</h3>
+    <p>
+      Menambahkan data FAQ baru ke dalam database. Endpoint ini memerlukan
+      otorisasi.
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+    <h3>Request Body <code>application/json</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>question</code></td>
+          <td>string</td>
+          <td>Teks pertanyaan. <span class="required">Wajib.</span></td>
+        </tr>
+        <tr>
+          <td><code>answer</code></td>
+          <td>string</td>
+          <td>Teks jawaban. <span class="required">Wajib.</span></td>
+        </tr>
+        <tr>
+          <td><code>category_id</code></td>
+          <td>integer</td>
+          <td>
+            ID kategori yang sudah ada. Opsional, salah satu dari
+            <code>category_id</code> atau <code>category_name</code> harus ada.
+          </td>
+        </tr>
+        <tr>
+          <td><code>category_name</code></td>
+          <td>string</td>
+          <td>Nama kategori baru yang akan dibuat. Opsional.</td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Success Response <code>201 Created</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "FAQ berhasil ditambahkan.",
+    "data": {
+        "faq": {
+            "id": 1,
+            "question": "Bagaimana cara mendaftar?",
+            "answer": "Anda bisa mendaftar melalui halaman registrasi dengan mengisi email dan password.",
+            "created_at": "2025-09-20T18:30:00.000Z",
+            "category_id": 1
+        }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-get">GET</span>
+    <span class="endpoint-path">/faqs</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Daftar FAQ</h3>
+    <p>
+      Mengambil daftar FAQ dengan dukungan pagination, pencarian (query `q`),
+      dan filter.
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-none">None</span>
+    </div>
+    <h3>Query Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>q</code></td>
+          <td>string</td>
+          <td>Teks pencarian untuk pertanyaan atau jawaban. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>category_id</code></td>
+          <td>integer</td>
+          <td>Filter berdasarkan ID kategori. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>category_name</code></td>
+          <td>string</td>
+          <td>Filter berdasarkan nama kategori. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>page</code></td>
+          <td>integer</td>
+          <td>Nomor halaman. Default: 1. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>limit</code></td>
+          <td>integer</td>
+          <td>Jumlah item per halaman. Default: 20. Opsional.</td>
+        </tr>
+        <tr>
+          <td><code>sort</code></td>
+          <td>string</td>
+          <td>
+            Urutan pengurutan. Contoh: <code>question.asc</code>. Default:
+            <code>created_at.desc</code>. Opsional.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "data": [
+        {
+            "id": 1,
+            "question": "Bagaimana cara mendaftar?",
+            "answer": "Anda bisa mendaftar melalui halaman registrasi...",
+            "created_at": "2025-09-20T18:30:00.000Z",
+            "category_id": 1,
+            "faq_categories": {
+                "id": 1,
+                "name": "Umum"
+            }
+        }
+    ],
+    "meta": { "page": 1, "limit": 20, "total": 10 }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-get">GET</span>
+    <span class="endpoint-path">/faqs/{id}</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Detail FAQ</h3>
+    <p>Mengambil detail satu data FAQ berdasarkan ID-nya.</p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-none">None</span>
+    </div>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "data": {
+        "faq": {
+            "id": 1,
+            "question": "Bagaimana cara mendaftar?",
+            "answer": "Anda bisa mendaftar melalui halaman registrasi dengan mengisi email dan password.",
+            "created_at": "2025-09-20T18:30:00.000Z",
+            "category_id": 1,
+            "faq_categories": {
+                "id": 1,
+                "name": "Umum"
+            }
+        }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-put">PUT</span>
+    <span class="endpoint-path">/faqs/{id}</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Perbarui FAQ</h3>
+    <p>
+      Memperbarui data FAQ berdasarkan ID. Semua field bersifat opsional (kirim
+      hanya yang ingin diubah).
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+    <h3>Request Body <code>application/json</code></h3>
+    <p>
+      Sama seperti request body untuk <code>POST /faqs</code>, tetapi semua
+      field bersifat opsional.
+    </p>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "FAQ berhasil diperbarui."
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-delete">DELETE</span>
+    <span class="endpoint-path">/faqs/{id}</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Hapus FAQ</h3>
+    <p>Menghapus data FAQ secara permanen berdasarkan ID.</p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "FAQ berhasil dihapus."
+}</code></pre>
+  </div>
+</div>
+
+<h2>FAQ Categories</h2>
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-get">GET</span>
+    <span class="endpoint-path">/faq-categories</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Daftar Kategori FAQ</h3>
+    <p>Mengambil daftar semua kategori FAQ.</p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-none">None</span>
+    </div>
+    <h3>Success Response <code>200 OK</code></h3>
+    <pre><code>{
+    "status": "success",
+    "data": [
+        { "id": 1, "name": "Umum" },
+        { "id": 2, "name": "Akun" }
+    ]
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/faq-categories</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Buat Kategori FAQ Baru</h3>
+    <p>Menambahkan kategori FAQ baru.</p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+    <h3>Request Body <code>application/json</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>name</code></td>
+          <td>string</td>
+          <td>Nama kategori baru. <span class="required">Wajib.</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Success Response <code>201 Created</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Kategori berhasil ditambahkan.",
+    "data": {
+        "category": { "id": 3, "name": "Pembayaran" }
+    }
+}</code></pre>
+  </div>
+</div>

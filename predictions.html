@@ -1,0 +1,101 @@
+<h1>Prediction Service</h1>
+<p>
+  Endpoint ini berfungsi sebagai jembatan antara aplikasi dan model Machine
+  Learning. Pengguna dapat mengunggah gambar makanan, dan server akan
+  mengembalikan nama prediksi makanan tersebut beserta daftar makanan serupa
+  yang ada di database.
+</p>
+
+<h2>Food Prediction</h2>
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/predictions</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Prediksi Gambar Makanan</h3>
+    <p>
+      Mengunggah sebuah file gambar untuk diproses oleh model Machine Learning.
+      Endpoint ini akan mengembalikan nama makanan yang diprediksi, URL gambar
+      yang telah diunggah, dan daftar makanan dari database yang cocok dengan
+      nama prediksi.
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-none">None</span>
+    </div>
+
+    <h3>Request Body <code>multipart/form-data</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>image</code></td>
+          <td>file</td>
+          <td>
+            File gambar makanan yang akan diprediksi. Ukuran maksimal 5MB.
+            <span class="required">Wajib.</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Success Response <code>200 OK</code></h3>
+    <p>Respons berisi nama prediksi dan daftar makanan terkait.</p>
+    <pre><code>{
+    "status": "success",
+    "data": {
+        "prediction": {
+            "predicted_name": "Nasi Goreng",
+            "image_url": "https://url.supabase.co/storage/v1/object/public/predictions/uuid-image.jpg",
+            "foods": [
+                {
+                    "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+                    "name": "Nasi Goreng Spesial",
+                    "photo_url": "https://url.supabase.co/storage/v1/object/public/foods/nasi-goreng.jpg",
+                    "description": "Nasi goreng spesial dengan telur dan ayam.",
+                    "category_id": 1,
+                    "serving_size": 1,
+                    "serving_unit": "porsi",
+                    "weight_size": 250,
+                    "weight_unit": "gr",
+                    "calories": 450,
+                    "created_at": "2025-09-20T12:00:00.000Z",
+                    "food_categories": {
+                        "id": 1,
+                        "name": "Nasi"
+                    }
+                },
+                {
+                    "id": "e5f6a7b8-c9d0-1234-5678-90abcdef1234",
+                    "name": "Nasi Goreng Seafood",
+                    "photo_url": "https://url.supabase.co/storage/v1/object/public/foods/nasi-goreng-seafood.jpg",
+                    "description": "Nasi goreng dengan udang, cumi, dan bumbu khas.",
+                    "category_id": 1,
+                    "serving_size": 1,
+                    "serving_unit": "piring",
+                    "weight_size": 280,
+                    "weight_unit": "gr",
+                    "calories": 520,
+                    "created_at": "2025-09-18T18:00:00.000Z",
+                    "food_categories": {
+                        "id": 1,
+                        "name": "Nasi"
+                    }
+                }
+            ],
+            "meta": {
+                "page": 1,
+                "limit": 10,
+                "total": 5
+            }
+        }
+    }
+}</code></pre>
+  </div>
+</div>
