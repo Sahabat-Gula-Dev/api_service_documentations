@@ -1,0 +1,261 @@
+<h1>Log Service</h1>
+<p>
+  Endpoint-endpoint ini digunakan oleh pengguna untuk mencatat aktivitas dan
+  konsumsi harian mereka, seperti makanan, olahraga, langkah, dan air. Semua
+  endpoint di sini memerlukan otorisasi dengan scope <code>user</code>.
+</p>
+
+<h2>Logging Endpoints</h2>
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/log-foods</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Mencatat Konsumsi Makanan</h3>
+    <p>
+      Mencatat satu atau lebih makanan yang dikonsumsi oleh pengguna. Server
+      akan mengembalikan total nutrisi yang dikonsumsi dari log tersebut.
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+
+    <h3>Request Body <code>application/json</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>foods</code></td>
+          <td>array of objects</td>
+          <td>
+            Array yang berisi objek makanan yang dikonsumsi.
+            <span class="required">Wajib.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><code>foods[].food_id</code></td>
+          <td>string (uuid)</td>
+          <td>
+            ID unik dari makanan yang ada di database.
+            <span class="required">Wajib.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><code>foods[].portion</code></td>
+          <td>integer</td>
+          <td>Jumlah porsi yang dikonsumsi. Default: 1. Opsional.</td>
+        </tr>
+      </tbody>
+    </table>
+
+
+    <h3>Success Response <code>201 Created</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Konsumsi makanan berhasil dicatat.",
+    "data": {
+        "logs": [
+            {
+                "id": 101,
+                "food_id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+                "portion": 1.5,
+                "logged_at": "2025-09-21T12:30:00.000Z"
+            },
+            {
+                "id": 102,
+                "food_id": "b2c3d4e5-f6a7-8901-2345-67890abcdef1",
+                "portion": 1,
+                "logged_at": "2025-09-21T12:30:00.000Z"
+            }
+        ],
+        "totals": {
+            "calories": 650.75,
+            "carbs": 75.5,
+            "protein": 35.2,
+            "fat": 25.8,
+            "sugar": 15.0,
+            "sodium": 0.85,
+            "fiber": 8.5,
+            "potassium": 0.9
+        },
+        "ratios": {
+            "calories_ratio": 0.31,
+            "sugar_ratio": 0.3
+        }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/log-activities</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Mencatat Aktivitas</h3>
+    <p>
+      Mencatat satu atau lebih aktivitas yang dilakukan oleh pengguna. Server
+      akan mengembalikan total kalori yang terbakar.
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+
+    <h3>Request Body <code>application/json</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>activities</code></td>
+          <td>array of objects</td>
+          <td>
+            Array yang berisi objek aktivitas yang dilakukan.
+            <span class="required">Wajib.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><code>activities[].activity_id</code></td>
+          <td>string (uuid)</td>
+          <td>
+            ID unik dari aktivitas yang ada di database.
+            <span class="required">Wajib.</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+
+    <h3>Success Response <code>201 Created</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Aktivitas berhasil dicatat.",
+    "data": {
+        "logs": [
+            {
+                "id": 51,
+                "activity_id": "c1d2e3f4-a5b6-7890-1234-567890abcdef",
+                "logged_at": "2025-09-21T08:00:00.000Z"
+            },
+            {
+                "id": 52,
+                "activity_id": "d2e3f4a5-b6c7-8901-2345-67890abcdef1",
+                "logged_at": "2025-09-21T08:00:00.000Z"
+            }
+        ],
+        "total_burned": 400
+    }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/log-steps</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Mencatat Langkah Kaki</h3>
+    <p>Mencatat total langkah kaki harian pengguna.</p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+
+    <h3>Request Body <code>application/json</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>steps</code></td>
+          <td>integer</td>
+          <td>
+            Jumlah langkah kaki. <span class="required">Wajib, min 1.</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Success Response <code>201 Created</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Langkah berhasil dicatat.",
+    "data": {
+        "log": {
+            "id": 201,
+            "steps": 8500,
+            "logged_at": "2025-09-21T23:50:00.000Z"
+        }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<div class="endpoint-card">
+  <div class="endpoint-header">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/log-water</span>
+  </div>
+  <div class="endpoint-body">
+    <h3>Mencatat Konsumsi Air</h3>
+    <p>
+      Mencatat jumlah air yang diminum oleh pengguna dalam satuan mililiter
+      (ml).
+    </p>
+    <div class="auth-badge">
+      Authorization: <span class="auth-required">Bearer Token</span>
+    </div>
+
+    <h3>Request Body <code>application/json</code></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>amount</code></td>
+          <td>integer</td>
+          <td>
+            Jumlah air dalam mililiter (ml).
+            <span class="required">Wajib, min 1.</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Success Response <code>201 Created</code></h3>
+    <pre><code>{
+    "status": "success",
+    "message": "Konsumsi air berhasil dicatat.",
+    "data": {
+        "log": {
+            "id": 301,
+            "amount": 250,
+            "logged_at": "2025-09-21T09:15:00.000Z"
+        }
+    }
+}</code></pre>
+  </div>
+</div>
